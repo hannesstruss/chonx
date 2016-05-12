@@ -39,7 +39,9 @@ enum class Slot {
 
   FULL_HOUSE {
     override fun points(roll: DiceRoll): Int {
-      throw UnsupportedOperationException()
+      val histogram: Map<Int, Int> = roll.dice().groupBy { it }.mapValues { it.value.size }
+      val isFullHouse = histogram.values.sorted() == listOf(2, 3)
+      return if (isFullHouse) 25 else 0
     }
   },
 
