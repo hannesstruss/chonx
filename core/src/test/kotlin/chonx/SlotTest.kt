@@ -28,4 +28,20 @@ class SlotTest {
   @Test fun testFullHouse() {
     fail()
   }
+
+  @Test fun testSmallStraight() {
+    fail()
+  }
+
+  @Test fun testLargeStraight() {
+    fail()
+  }
+
+  @Test fun testChance() {
+    fail()
+  }
+
+  @Test fun testFiveOfAKind() {
+    fail()
+  }
 }
