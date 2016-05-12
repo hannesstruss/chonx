@@ -28,6 +28,7 @@ class GameTest {
     val nextGame = game.move(DiceRoll(1, 1, 1, 1, 1), Slot.CHANCE)
 
     assertThat(nextGame.score(hannes)).isEqualTo(5)
+    assertThat(nextGame.score(felix)).isEqualTo(0)
   }
 
   @Test fun shouldCalculateUpperHalfBonus() {
