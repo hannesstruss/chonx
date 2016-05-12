@@ -43,4 +43,11 @@ class GameTest {
 
     assertThat(score).isEqualTo(140)
   }
+
+  @Test fun shouldNotAllowMoveIfPlayerHasFilledTheSlotAlready() {
+    val game = Game.new(listOf(hannes))
+        .move(DiceRoll(1, 1, 1, 1, 1), Slot.ACES)
+
+    assertThat(game.isLegalMove(Slot.ACES)).isFalse()
+  }
 }

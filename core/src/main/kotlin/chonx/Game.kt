@@ -32,4 +32,7 @@ class Game private constructor(val players: List<Player>,
 
     return topHalfScore + bottomHalfScore
   }
+
+  fun isLegalMove(slot: Slot) =
+      moves.filter { it.player == currentPlayer && it.slot == slot }.isEmpty()
 }
