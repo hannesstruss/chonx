@@ -33,19 +33,30 @@ class SlotTest {
   }
 
   @Test fun testSmallStraight() {
-    fail()
+    pointsOf(SMALL_STRAIGHT, 1, 2, 3, 4, 6) shouldBe 30
+    pointsOf(SMALL_STRAIGHT, 6, 3, 2, 1, 4) shouldBe 30
+    pointsOf(SMALL_STRAIGHT, 1, 2, 3, 4, 5) shouldBe 30
+    pointsOf(SMALL_STRAIGHT, 1, 2, 3, 5, 6) shouldBe 0
+    pointsOf(SMALL_STRAIGHT, 1, 1, 2, 3, 3) shouldBe 0
   }
 
   @Test fun testLargeStraight() {
-    fail()
+    pointsOf(LARGE_STRAIGHT, 1, 2, 3, 4, 5) shouldBe 40
+    pointsOf(LARGE_STRAIGHT, 5, 3, 2, 1, 4) shouldBe 40
+    pointsOf(LARGE_STRAIGHT, 1, 2, 3, 5, 6) shouldBe 0
+    pointsOf(LARGE_STRAIGHT, 1, 1, 2, 3, 3) shouldBe 0
   }
 
   @Test fun testChance() {
-    fail()
+    pointsOf(CHANCE, 1, 1, 1, 1, 1) shouldBe 5
+    pointsOf(CHANCE, 1, 2, 4, 5, 6) shouldBe 18
+    pointsOf(CHANCE, 6, 6, 6, 6, 6) shouldBe 30
   }
 
   @Test fun testFiveOfAKind() {
-    fail()
+    pointsOf(FIVE_OF_A_KIND, 1, 1, 1, 1, 1) shouldBe 50
+    pointsOf(FIVE_OF_A_KIND, 6, 6, 6, 6, 6) shouldBe 50
+    pointsOf(FIVE_OF_A_KIND, 2, 3, 3, 3, 3) shouldBe 0
   }
 
   private infix fun Int.shouldBe(value: Int) {
