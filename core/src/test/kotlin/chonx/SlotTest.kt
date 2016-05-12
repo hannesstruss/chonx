@@ -1,32 +1,35 @@
 package chonx
 
-import com.google.common.truth.Truth
+import chonx.Slot.*
 import com.google.common.truth.Truth.assertThat
-import org.junit.Assert
 import org.junit.Assert.fail
 import org.junit.Test
 
 class SlotTest {
   @Test fun testUpperHalf() {
-    assertThat(Slot.ACES.points(DiceRoll(1, 2, 3, 2, 1))).isEqualTo(2)
-    assertThat(Slot.TWOS.points(DiceRoll(2, 1, 5, 6, 4))).isEqualTo(2)
-    assertThat(Slot.THREES.points(DiceRoll(3, 3, 5, 6, 4))).isEqualTo(6)
-    assertThat(Slot.FOURS.points(DiceRoll(4, 4, 5, 6, 4))).isEqualTo(12)
-    assertThat(Slot.FIVES.points(DiceRoll(2, 1, 5, 5, 4))).isEqualTo(10)
-    assertThat(Slot.SIXES.points(DiceRoll(6, 6, 6, 6, 4))).isEqualTo(24)
+    pointsOf(THREES, 1, 2, 3, 2, 1) shouldBe 3
+    pointsOf(TWOS, 2, 1, 5, 6, 4) shouldBe 2
+    pointsOf(THREES, 3, 3, 5, 6, 4) shouldBe 6
+    pointsOf(FOURS, 4, 4, 5, 6, 4) shouldBe 12
+    pointsOf(FIVES, 2, 1, 5, 5, 4) shouldBe 10
+    pointsOf(SIXES, 6, 6, 6, 6, 4) shouldBe 24
   }
 
   @Test fun testThreeOfAKind() {
-    assertThat(Slot.THREE_OF_A_KIND.points(DiceRoll(3, 3, 3, 2, 2))).isEqualTo(13)
-    assertThat(Slot.THREE_OF_A_KIND.points(DiceRoll(1, 2, 3, 4, 5))).isEqualTo(0)
+    pointsOf(THREE_OF_A_KIND, 3, 3, 3, 2, 2) shouldBe 13
+    pointsOf(THREE_OF_A_KIND, 1, 2, 3, 4, 5) shouldBe 0
   }
 
   @Test fun testFourOfAKind() {
-    fail()
+    pointsOf(FOUR_OF_A_KIND, 1, 1, 2, 1, 1) shouldBe 6
+    pointsOf(FOUR_OF_A_KIND, 1, 2, 5, 4, 3) shouldBe 0
   }
 
   @Test fun testFullHouse() {
-    fail()
+    pointsOf(FULL_HOUSE, 2, 2, 2, 5, 5) shouldBe 25
+    pointsOf(FULL_HOUSE, 4, 4, 6, 6, 6) shouldBe 25
+    pointsOf(FULL_HOUSE, 1, 2, 3, 4, 5) shouldBe 0
+    pointsOf(FULL_HOUSE, 5, 5, 5, 5, 5) shouldBe 0
   }
 
   @Test fun testSmallStraight() {
@@ -44,4 +47,11 @@ class SlotTest {
   @Test fun testFiveOfAKind() {
     fail()
   }
+
+  private infix fun Int.shouldBe(value: Int) {
+    assertThat(this).isEqualTo(value)
+  }
+
+  private fun pointsOf(slot: Slot, die1: Int, die2: Int, die3: Int, die4: Int, die5: Int) =
+    slot.points(DiceRoll(die1, die2, die3, die4, die5))
 }
