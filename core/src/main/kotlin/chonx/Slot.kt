@@ -26,9 +26,12 @@ enum class Slot {
   },
 
   THREE_OF_A_KIND {
-    override fun points(roll: DiceRoll): Int {
-      throw UnsupportedOperationException()
-    }
+    override fun points(roll: DiceRoll) =
+        roll.dice()
+            .groupBy { it }
+            .values
+            .any { it.size >= 3 }
+            .let { if (it) roll.dice().sum() else 0 }
   },
 
   FOUR_OF_A_KIND {
@@ -39,8 +42,7 @@ enum class Slot {
 
   FULL_HOUSE {
     override fun points(roll: DiceRoll): Int {
-      val histogram: Map<Int, Int> = roll.dice().groupBy { it }.mapValues { it.value.size }
-      val isFullHouse = histogram.values.sorted() == listOf(2, 3)
+      val isFullHouse = roll.dice().histogram().values.sorted() == listOf(2, 3)
       return if (isFullHouse) 25 else 0
     }
   },
@@ -72,4 +74,7 @@ enum class Slot {
 
   fun numbers(number: Int, roll: DiceRoll) =
       roll.dice().filter { it == number }.sum()
+
+  fun List<Int>.histogram(): Map<Int, Int> =
+      this.groupBy { it }.mapValues { it.value.size }
 }
