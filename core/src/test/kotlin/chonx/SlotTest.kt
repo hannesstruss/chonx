@@ -2,6 +2,8 @@ package chonx
 
 import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
+import org.junit.Assert
+import org.junit.Assert.fail
 import org.junit.Test
 
 class SlotTest {
@@ -15,6 +17,15 @@ class SlotTest {
   }
 
   @Test fun testThreeOfAKind() {
+    assertThat(Slot.THREE_OF_A_KIND.points(DiceRoll(3, 3, 3, 2, 2))).isEqualTo(13)
+    assertThat(Slot.THREE_OF_A_KIND.points(DiceRoll(1, 2, 3, 4, 5))).isEqualTo(0)
+  }
 
+  @Test fun testFourOfAKind() {
+    fail()
+  }
+
+  @Test fun testFullHouse() {
+    fail()
   }
 }
