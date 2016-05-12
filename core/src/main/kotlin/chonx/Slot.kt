@@ -35,9 +35,12 @@ enum class Slot {
   },
 
   FOUR_OF_A_KIND {
-    override fun points(roll: DiceRoll): Int {
-      throw UnsupportedOperationException()
-    }
+    override fun points(roll: DiceRoll) =
+        roll.dice()
+            .groupBy { it }
+            .values
+            .any { it.size >= 4 }
+            .let { if (it) roll.dice().sum() else 0 }
   },
 
   FULL_HOUSE {
