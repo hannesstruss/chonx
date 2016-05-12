@@ -58,8 +58,8 @@ enum class Slot {
             .map { it.second - it.first }
             .dropWhile { it != 1 }
             .takeWhile { it == 1 }
-            .toList()
-            .let { if (it.size >= 3) 30 else 0 }
+            .count()
+            .let { if (it >= 3) 30 else 0 }
   },
 
   LARGE_STRAIGHT {
