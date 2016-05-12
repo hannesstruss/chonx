@@ -52,13 +52,24 @@ enum class Slot {
 
   SMALL_STRAIGHT {
     override fun points(roll: DiceRoll) =
-        roll.dice().sorted().sum()
+        roll.dice()
+            .sorted()
+            .pairs()
+            .map { it.second - it.first }
+            .dropWhile { it != 1 }
+            .takeWhile { it == 1 }
+            .toList()
+            .let { if (it.size >= 3) 30 else 0 }
   },
 
   LARGE_STRAIGHT {
-    override fun points(roll: DiceRoll): Int {
-      throw UnsupportedOperationException()
-    }
+    override fun points(roll: DiceRoll) =
+        roll.dice()
+            .sorted()
+            .pairs()
+            .map { it.second - it.first }
+            .toList()
+            .let { if (it == listOf(1, 1, 1, 1)) 40 else 0 }
   },
 
   CHANCE {

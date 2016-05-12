@@ -36,6 +36,7 @@ class SlotTest {
     pointsOf(SMALL_STRAIGHT, 1, 2, 3, 4, 6) shouldBe 30
     pointsOf(SMALL_STRAIGHT, 6, 3, 2, 1, 4) shouldBe 30
     pointsOf(SMALL_STRAIGHT, 1, 2, 3, 4, 5) shouldBe 30
+    pointsOf(SMALL_STRAIGHT, 1, 3, 4, 5, 6) shouldBe 30
     pointsOf(SMALL_STRAIGHT, 1, 2, 3, 5, 6) shouldBe 0
     pointsOf(SMALL_STRAIGHT, 1, 1, 2, 3, 3) shouldBe 0
   }
