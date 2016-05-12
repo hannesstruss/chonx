@@ -50,4 +50,17 @@ class GameTest {
 
     assertThat(game.isLegalMove(Slot.ACES)).isFalse()
   }
+
+  @Test fun gameShouldEnd() {
+    var game = Game.new(players)
+    assertThat(game.hasEnded()).isFalse()
+
+    Slot.values().forEach { slot ->
+      players.forEach {
+        game = game.move(DiceRoll(1, 1, 1, 1, 1), slot)
+      }
+    }
+
+    assertThat(game.hasEnded()).isTrue()
+  }
 }

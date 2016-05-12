@@ -35,4 +35,10 @@ class Game private constructor(val players: List<Player>,
 
   fun isLegalMove(slot: Slot) =
       moves.filter { it.player == currentPlayer && it.slot == slot }.isEmpty()
+
+  fun hasEnded() =
+      moves.isNotEmpty() && moves
+          .groupBy { it.player }
+          .values
+          .all { it.size == Slot.values().size }
 }
