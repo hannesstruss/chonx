@@ -52,24 +52,13 @@ enum class Slot {
 
   SMALL_STRAIGHT {
     override fun points(roll: DiceRoll) =
-        roll.dice()
-            .sorted()
-            .pairs()
-            .map { it.second - it.first }
-            .dropWhile { it != 1 }
-            .takeWhile { it == 1 }
-            .count()
-            .let { if (it >= 3) 30 else 0 }
+        if (roll.dice().isStraight(4)) 30 else 0
+
   },
 
   LARGE_STRAIGHT {
     override fun points(roll: DiceRoll) =
-        roll.dice()
-            .sorted()
-            .pairs()
-            .map { it.second - it.first }
-            .toList()
-            .let { if (it == listOf(1, 1, 1, 1)) 40 else 0 }
+        if (roll.dice().isStraight(5)) 40 else 0
   },
 
   CHANCE {
@@ -85,6 +74,16 @@ enum class Slot {
   };
 
   abstract fun points(roll: DiceRoll): Int
+
+  fun List<Int>.isStraight(size: Int) =
+      this
+          .sorted()
+          .pairs()
+          .map { it.second - it.first }
+          .dropWhile { it != 1 }
+          .takeWhile { it == 1 }
+          .count()
+          .let { it >= size - 1 }
 
   fun numbers(number: Int, roll: DiceRoll) =
       roll.dice().filter { it == number }.sum()
