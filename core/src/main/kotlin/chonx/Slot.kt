@@ -61,7 +61,8 @@ enum class Slot {
   /** a.k.a. brand name */
   FIVE_OF_A_KIND {
     override fun points(roll: DiceRoll): Int {
-      throw UnsupportedOperationException()
+      val distinct = roll.dice().distinct()
+      return if (distinct.size == 1) 50 else 0
     }
   };
 
