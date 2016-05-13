@@ -1,6 +1,6 @@
-package chonx
+package chonx.core
 
-import chonx.Slot.*
+import chonx.core.Slot.*
 
 class Game private constructor(val players: List<Player>,
                                val currentPlayer: Player,

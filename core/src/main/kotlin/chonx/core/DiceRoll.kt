@@ -1,4 +1,4 @@
-package chonx
+package chonx.core
 
 data class DiceRoll(val die1: Int, val die2: Int, val die3: Int, val die4: Int, val die5: Int) {
   init {

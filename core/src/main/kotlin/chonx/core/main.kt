@@ -1,4 +1,4 @@
-package chonx
+package chonx.core
 
 fun main(args: Array<String>) {
   val hannes = Player("Hannes")

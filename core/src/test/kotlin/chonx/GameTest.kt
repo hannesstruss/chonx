@@ -1,5 +1,9 @@
 package chonx
 
+import chonx.core.DiceRoll
+import chonx.core.Game
+import chonx.core.Player
+import chonx.core.Slot
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 

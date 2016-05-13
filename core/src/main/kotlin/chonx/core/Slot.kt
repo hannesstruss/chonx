@@ -1,4 +1,4 @@
-package chonx
+package chonx.core
 
 enum class Slot {
   ACES {

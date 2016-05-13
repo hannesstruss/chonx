@@ -1,6 +1,8 @@
 package chonx
 
-import chonx.Slot.*
+import chonx.core.Slot.*
+import chonx.core.DiceRoll
+import chonx.core.Slot
 import com.google.common.truth.Truth.assertThat
 import org.junit.Assert.fail
 import org.junit.Test
