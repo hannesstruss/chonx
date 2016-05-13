@@ -1,0 +1,30 @@
+ext {
+  kotlin_version = '1.0.2'
+}
+
+ext.deps = [
+    kotlin_stdlib: "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
+
+    junit: 'junit:junit:4.12',
+    truth: 'com.google.truth:truth:0.28'
+]
+
+subprojects {
+  buildscript {
+    repositories {
+      jcenter()
+    }
+
+    dependencies {
+      classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+  }
+
+  repositories {
+    jcenter()
+  }
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.13'
+}

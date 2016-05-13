@@ -4,7 +4,6 @@ dependencies {
   compile deps.kotlin_stdlib
 
   testCompile deps.junit
-  testCompile deps.truth
 }
 
 sourceSets {

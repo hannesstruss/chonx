@@ -1,2 +1,4 @@
-rootProject.name = 'chonx'
 include ':core'
+include ':bot'
+
+rootProject.name = 'chonx'
