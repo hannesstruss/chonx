@@ -1,7 +1,14 @@
 apply plugin: 'kotlin'
+apply plugin: 'application'
 
 dependencies {
   compile deps.kotlin_stdlib
+
+  compile 'com.squareup.okhttp3:okhttp:3.2.0'
+  compile 'com.squareup.retrofit2:retrofit:2.0.2'
+  compile 'com.squareup.retrofit2:converter-scalars:2.0.2'
+  compile 'com.squareup.retrofit2:converter-moshi:2.0.2'
+  compile 'io.reactivex:rxjava:1.1.5'
 
   testCompile deps.junit
 }
@@ -10,3 +17,6 @@ sourceSets {
   main.java.srcDirs += 'src/main/kotlin'
   test.java.srcDirs += 'src/test/kotlin'
 }
+
+mainClassName = 'chonx.bot.AppKt'
+applicationDefaultJvmArgs = ["-Dchonx.bot=${chonxBotToken}"]

@@ -3,4 +3,5 @@ build
 .idea
 .class
 .gradle
+local.properties
 .DS_Store
