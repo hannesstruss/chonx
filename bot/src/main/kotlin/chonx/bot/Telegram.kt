@@ -1,9 +1,18 @@
 package chonx.bot
 
+import chonx.bot.telegram.types.Result
+import chonx.bot.telegram.types.Update
+import chonx.bot.telegram.types.User
 import retrofit2.Call
 
-class Telegram(private val api: TelegramApi, private val botToken: String) {
-  fun getMe(): User = api.getMe(botToken).executeOrFail()
+class Telegram(private val api: TelegramApi, private val token: String) {
+  fun getMe(): User = api.getMe(token).executeOrFail()
+
+  fun getUpdates(): List<Update> = api.getUpdates(token).executeOrFail()
+
+  fun sendMessage(userId: Int, text: String) {
+    api.sendMessage(token, userId, text).execute()
+  }
 
   private fun <T> Call<Result<T>?>.executeOrFail(): T {
     val response = this.execute()

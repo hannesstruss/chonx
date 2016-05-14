@@ -16,8 +16,9 @@ fun main(args: Array<String>) {
       .build()
       .create(TelegramApi::class.java)
 
-  val telegram = Telegram(api, System.getProperty("chonx.bot"))
+  val botToken = System.getProperty("chonx.bot")
+  val telegram = Telegram(api, botToken)
 
-  println(telegram.getMe())
+  telegram.getUpdates().forEach { println(it) }
 }
 
