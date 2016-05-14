@@ -1,5 +1,6 @@
 package chonx.bot.telegram
 
+import chonx.bot.telegram.requests.SendMessage
 import chonx.bot.telegram.types.Message
 import chonx.bot.telegram.types.Result
 import chonx.bot.telegram.types.Update
@@ -21,7 +22,5 @@ interface TelegramApi {
                  @Query("timeout") timeout: Int): Call<Result<List<Update>>?>
 
   @POST("sendMessage")
-  @FormUrlEncoded
-  fun sendMessage(@Field("chat_id") chatId: Int,
-                  @Field("text") text: String): Call<Result<Message>?>
+  fun sendMessage(@Body sendMessage: SendMessage): Call<Result<Message>?>
 }
