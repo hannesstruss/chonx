@@ -11,5 +11,5 @@ import retrofit2.http.Path
  */
 interface TelegramApi {
   @GET("./bot{Token}/getMe")
-  fun getMe(@Path("Token") token: String): Call<Result<User>>
+  fun getMe(@Path("Token") token: String): Call<Result<User>?>
 }
