@@ -10,7 +10,7 @@ import org.junit.Test
 class GameTest {
   val hannes = Player("hannes")
   val felix = Player("felix")
-  val players = listOf(hannes, felix)
+  val players = setOf(hannes, felix)
 
   @Test fun shouldMoveToNextPlayerAfterMove() {
     val game = Game.new(players)
@@ -36,7 +36,7 @@ class GameTest {
   }
 
   @Test fun shouldCalculateUpperHalfBonus() {
-    val score = Game.new(listOf(hannes))
+    val score = Game.new(setOf(hannes))
         .move(DiceRoll(1, 1, 1, 1, 1), Slot.ACES)
         .move(DiceRoll(2, 2, 2, 2, 2), Slot.TWOS)
         .move(DiceRoll(3, 3, 3, 3, 3), Slot.THREES)
@@ -49,7 +49,7 @@ class GameTest {
   }
 
   @Test fun shouldNotAllowMoveIfPlayerHasFilledTheSlotAlready() {
-    val game = Game.new(listOf(hannes))
+    val game = Game.new(setOf(hannes))
         .move(DiceRoll(1, 1, 1, 1, 1), Slot.ACES)
 
     assertThat(game.isLegalMove(Slot.ACES)).isFalse()

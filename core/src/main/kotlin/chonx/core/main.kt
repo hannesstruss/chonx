@@ -1,9 +1,16 @@
 package chonx.core
 
 fun main(args: Array<String>) {
-  val hannes = Player("Hannes")
-  val game = Game.new(listOf(hannes))
+  val preGame = PreGame.new()
+      .addPlayer("hannesstruss")
+      .addPlayer("felixgoldstein")
 
-  val roll = DiceRoll(1, 2, 5, 4, 6)
-  val newGame = game.move(roll, Slot.CHANCE)
+  var game = Game.new(preGame.players())
+
+  var move = game.roll()
+  move = move.lock(0)
+  move = move.lock(1)
+  move = move.roll()
+
+//  game = game.move(move, Slot.CHANCE)
 }
