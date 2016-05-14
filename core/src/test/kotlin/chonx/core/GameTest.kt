@@ -30,7 +30,7 @@ class GameTest {
     assertThat(thirdGame.currentPlayer).isEqualTo(hannes)
   }
 
-  @Test fun shouldNotAllowMoveIfPlayerHasFilledTheSlotAlready() {
+  @Test fun `should not allow move if player has filled the slot already`() {
     val game = Game(listOf(hannes), hannes)
     val move = game.roll()
     val updatedGame = game.move(move, Slot.ACES)
@@ -51,7 +51,7 @@ class GameTest {
     game.move(move, Slot.ACES)
   }
 
-  @Test fun gameShouldEnd() {
+  @Test fun `game should end`() {
     var game = Game.new(players.toSet())
     assertThat(game.hasEnded()).isFalse()
 
