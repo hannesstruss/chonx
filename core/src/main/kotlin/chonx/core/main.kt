@@ -12,5 +12,5 @@ fun main(args: Array<String>) {
   move = move.lock(1)
   move = move.roll()
 
-//  game = game.move(move, Slot.CHANCE)
+  game = game.move(move, Slot.CHANCE)
 }

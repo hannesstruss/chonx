@@ -1,4 +1,4 @@
-package chonx
+package chonx.core
 
 import chonx.core.pairs
 import com.google.common.truth.Truth.assertThat

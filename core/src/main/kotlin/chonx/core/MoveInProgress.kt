@@ -2,7 +2,7 @@ package chonx.core
 
 class MoveInProgress private constructor(
     private val die: Die,
-    private val player: Player,
+    val player: Player,
     private val rollsLeft: Int,
     private val dice: List<Int>,
     private val locks: Set<Int>

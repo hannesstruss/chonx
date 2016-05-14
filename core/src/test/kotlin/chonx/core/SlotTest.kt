@@ -1,4 +1,4 @@
-package chonx
+package chonx.core
 
 import chonx.core.Slot.*
 import chonx.core.DiceRoll
