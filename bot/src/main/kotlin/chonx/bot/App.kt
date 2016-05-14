@@ -8,17 +8,16 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 fun main(args: Array<String>) {
   val okClient = OkHttpClient.Builder().followRedirects(false).build()
 
+  val botToken = System.getProperty("chonx.bot")
   val api = Retrofit.Builder()
-      .baseUrl("https://api.telegram.org/")
+      .baseUrl("https://api.telegram.org/bot${botToken}/")
       .client(okClient)
       .addConverterFactory(ScalarsConverterFactory.create())
       .addConverterFactory(MoshiConverterFactory.create())
       .build()
       .create(TelegramApi::class.java)
 
-  val botToken = System.getProperty("chonx.bot")
-  val telegram = Telegram(api, botToken)
-
+  val telegram = Telegram(api)
   telegram.getUpdates().forEach { println(it) }
 }
 
