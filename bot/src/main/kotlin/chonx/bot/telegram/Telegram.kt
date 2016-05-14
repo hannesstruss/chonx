@@ -13,8 +13,8 @@ class Telegram(private val api: TelegramApi) {
   fun getUpdates(offset: Long = 0, timeout: Int = 0): List<Update> =
       api.getUpdates(offset, timeout).executeOrFail()
 
-  fun sendMessage(userId: Int, text: String): Message {
-    return api.sendMessage(userId, text).executeOrFail()
+  fun sendMessage(chatId: Int, text: String): Message {
+    return api.sendMessage(chatId, text).executeOrFail()
   }
 
   private fun <T> Call<Result<T>?>.executeOrFail(): T {
