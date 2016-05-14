@@ -6,9 +6,14 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.util.concurrent.TimeUnit
 
 fun main(args: Array<String>) {
-  val okClient = OkHttpClient.Builder().followRedirects(false).build()
+  val okClient = OkHttpClient.Builder()
+      .followRedirects(false)
+      .readTimeout(1, TimeUnit.MINUTES)
+      .connectTimeout(1, TimeUnit.MINUTES)
+      .build()
 
   val botToken = System.getProperty("chonx.bot")
   val api = Retrofit.Builder()
@@ -20,6 +25,15 @@ fun main(args: Array<String>) {
       .create(TelegramApi::class.java)
 
   val telegram = Telegram(api)
-  telegram.getUpdates().forEach { println(it) }
+
+  println("Listening for updates...")
+
+  val echobot = EchoBot(telegram)
+  Updates(telegram).updates()
+      .toBlocking()
+      .forEach { update ->
+        println(update.message?.text)
+        echobot.onUpdate(update)
+      }
 }
 

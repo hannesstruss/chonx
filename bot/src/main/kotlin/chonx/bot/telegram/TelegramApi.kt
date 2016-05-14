@@ -17,7 +17,8 @@ interface TelegramApi {
   fun getMe(): Call<Result<User>?>
 
   @GET("getUpdates")
-  fun getUpdates(): Call<Result<List<Update>>?>
+  fun getUpdates(@Query("offset") offset: Long,
+                 @Query("timeout") timeout: Int): Call<Result<List<Update>>?>
 
   @POST("sendMessage")
   @FormUrlEncoded

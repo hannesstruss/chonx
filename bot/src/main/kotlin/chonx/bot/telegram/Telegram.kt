@@ -10,7 +10,8 @@ import retrofit2.Call
 class Telegram(private val api: TelegramApi) {
   fun getMe(): User = api.getMe().executeOrFail()
 
-  fun getUpdates(): List<Update> = api.getUpdates().executeOrFail()
+  fun getUpdates(offset: Long = 0, timeout: Int = 0): List<Update> =
+      api.getUpdates(offset, timeout).executeOrFail()
 
   fun sendMessage(userId: Int, text: String): Message {
     return api.sendMessage(userId, text).executeOrFail()
