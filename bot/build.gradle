@@ -18,5 +18,7 @@ sourceSets {
   test.java.srcDirs += 'src/test/kotlin'
 }
 
+def chonxBotToken = project.hasProperty("chonxBotToken") ? chonxBotToken : "no-token"
+
 mainClassName = 'chonx.bot.AppKt'
 applicationDefaultJvmArgs = ["-Dchonx.bot=${chonxBotToken}"]
