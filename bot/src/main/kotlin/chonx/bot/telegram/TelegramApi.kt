@@ -1,4 +1,4 @@
-package chonx.bot
+package chonx.bot.telegram
 
 import chonx.bot.telegram.types.Message
 import chonx.bot.telegram.types.Result

@@ -1,5 +1,6 @@
-package chonx.bot
+package chonx.bot.telegram
 
+import chonx.bot.AuthException
 import chonx.bot.telegram.types.Message
 import chonx.bot.telegram.types.Result
 import chonx.bot.telegram.types.Update
