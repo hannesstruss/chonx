@@ -73,6 +73,11 @@ enum class Slot {
     }
   };
 
+  companion object {
+    fun byId(id: String): Slot? =
+        values().find { it.name == id.toUpperCase() }
+  }
+
   abstract fun points(roll: DiceRoll): Int
 
   fun List<Int>.isStraight(size: Int) =

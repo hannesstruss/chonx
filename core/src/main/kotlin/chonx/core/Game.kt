@@ -33,6 +33,11 @@ class Game constructor(val players: List<Player>,
 
   fun roll() = MoveInProgress.start(currentPlayer)
 
+  fun getSlotOptions(player: Player): Set<Slot> {
+    return Slot.values().toSet().minus(
+        moves.filter { it.player == player }.map { it.slot }.toSet())
+  }
+
   fun score(player: Player) = calculateScore(moves, player)
 
   fun isLegalMove(player: Player, slot: Slot) =

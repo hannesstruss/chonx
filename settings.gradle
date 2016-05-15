@@ -1,4 +1,6 @@
 include ':core'
 include ':bot'
+include ':cli'
 
 rootProject.name = 'chonx'
+

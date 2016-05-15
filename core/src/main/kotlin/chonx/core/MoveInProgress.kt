@@ -3,7 +3,7 @@ package chonx.core
 class MoveInProgress private constructor(
     private val die: Die,
     val player: Player,
-    private val rollsLeft: Int,
+    val rollsLeft: Int,
     private val dice: List<Int>,
     private val locks: Set<Int>
 ) {
@@ -34,6 +34,8 @@ class MoveInProgress private constructor(
   fun unlock(indexOfDieToUnlock: Int): MoveInProgress {
     return MoveInProgress(die, player, rollsLeft, dice, locks - indexOfDieToUnlock)
   }
+
+  fun isLocked(indexOfDie: Int) = indexOfDie in locks
 
   private fun lockedRoll(): List<Int> {
     return dice.mapIndexed { index, dieValue -> if (index in locks) dieValue else die.roll() }
