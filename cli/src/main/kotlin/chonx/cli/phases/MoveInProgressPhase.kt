@@ -8,8 +8,8 @@ class MoveInProgressPhase(
     private var move: MoveInProgress) : Phase {
 
   companion object {
-    val LockRegex = """^lock (\d+)""".toRegex()
-    val UnlockRegex = """^unlock (\d+)""".toRegex()
+    val LockRegex = """^lock (\d(, \d)*)""".toRegex()
+    val UnlockRegex = """^unlock (\d(, \d)*)""".toRegex()
     val RollRegex = """roll""".toRegex()
     val DoneRegex = """done""".toRegex()
     val InfoRegex = """score""".toRegex()
@@ -22,16 +22,20 @@ class MoveInProgressPhase(
 
   override fun handleCmd(cmd: String): PhaseResult {
     LockRegex.find(cmd)?.let {
-      val index = it.groupValues[1].toInt()
-      move = move.lock(index - 1)
-      println("Locked ${index}.")
+      val indices = it.groupValues[1].split(",").map { it.trim().toInt() }
+      indices.forEach {
+        move = move.lock(it - 1)
+      }
+      println("Locked ${indices.joinToString(", ")}.")
       return PhaseResult.Ready
     }
 
     UnlockRegex.find(cmd)?.let {
-      val index = it.groupValues[1].toInt()
-      move = move.unlock(index - 1)
-      println("Unlocked ${index}.")
+      val indices = it.groupValues[1].split(",").map { it.trim().toInt() }
+      indices.forEach {
+        move = move.unlock(it - 1)
+      }
+      println("Unlocked ${indices.joinToString(",")}.")
       return PhaseResult.Ready
     }
 

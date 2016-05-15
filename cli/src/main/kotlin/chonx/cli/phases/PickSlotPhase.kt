@@ -8,10 +8,6 @@ class PickSlotPhase(
     val game: Game,
     val move: MoveInProgress) : Phase {
 
-  companion object {
-    private val SlotIDs = Slot.values().map { it.name.toLowerCase() }.toSet()
-  }
-
   override fun preCmd(): PhaseResult {
     println("${game.currentPlayer.name}, those are your dice: ${move.dice().joinToString(", ")}")
     println("Which slot do you pick? (type 'help' for help)")
@@ -21,17 +17,23 @@ class PickSlotPhase(
   override fun handleCmd(cmd: String): PhaseResult {
     when {
       cmd == "help" -> printHelp()
-      cmd in SlotIDs -> {
+      cmd in availableSlotIds() -> {
         val slot = Slot.byId(cmd)!!
         val phase = GamePhase.move(game, move, slot)
         return PhaseResult.NextPhase(phase)
+      }
+      else -> {
+        println("Sorry, that's not a valid slot.")
+        return PhaseResult.Ready
       }
     }
     return PhaseResult.Ready
   }
 
   private fun printHelp() {
-    val opts = game.getSlotOptions(game.currentPlayer).map { it.name.toLowerCase() }.joinToString(", ")
+    val opts = availableSlotIds().joinToString(", ")
     println("Your options: $opts")
   }
+
+  private fun availableSlotIds() = game.getSlotOptions(game.currentPlayer).map { it.name.toLowerCase() }
 }
