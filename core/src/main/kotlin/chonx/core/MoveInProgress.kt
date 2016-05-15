@@ -1,6 +1,6 @@
 package chonx.core
 
-class MoveInProgress private constructor(
+data class MoveInProgress private constructor(
     private val die: Die,
     val player: Player,
     val rollsLeft: Int,
@@ -24,16 +24,12 @@ class MoveInProgress private constructor(
     if (rollsLeft <= 0) {
       throw IllegalStateException("Exhausted all rolls.")
     }
-    return MoveInProgress(die, player, rollsLeft - 1, lockedRoll(), locks)
+    return copy(rollsLeft = rollsLeft - 1, dice = lockedRoll())
   }
 
-  fun lock(indexOfDieToLock: Int): MoveInProgress {
-    return MoveInProgress(die, player, rollsLeft, dice, locks + indexOfDieToLock)
-  }
+  fun lock(indexOfDieToLock: Int) = copy(locks = locks + indexOfDieToLock)
 
-  fun unlock(indexOfDieToUnlock: Int): MoveInProgress {
-    return MoveInProgress(die, player, rollsLeft, dice, locks - indexOfDieToUnlock)
-  }
+  fun unlock(indexOfDieToUnlock: Int) = copy(locks = locks - indexOfDieToUnlock)
 
   fun isLocked(indexOfDie: Int) = indexOfDie in locks
 

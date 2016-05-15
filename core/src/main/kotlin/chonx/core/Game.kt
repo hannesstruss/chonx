@@ -2,7 +2,7 @@ package chonx.core
 
 import java.util.Collections
 
-class Game constructor(val players: List<Player>,
+data class Game constructor(val players: List<Player>,
                        val currentPlayer: Player,
                        private val moves: List<Move> = listOf()) {
 
@@ -28,7 +28,7 @@ class Game constructor(val players: List<Player>,
     val move = Move(currentPlayer, slot, DiceRoll.fromList(moveInProgress.dice()))
 
     val nextPlayer = players.get((players.indexOf(currentPlayer) + 1) % players.size)
-    return Game(players, nextPlayer, moves + move)
+    return copy(currentPlayer = nextPlayer, moves = moves + move)
   }
 
   fun roll() = MoveInProgress.start(currentPlayer)
