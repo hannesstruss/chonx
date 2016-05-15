@@ -46,7 +46,7 @@ class MoveInProgressPhase(
     }
 
     InfoRegex.find(cmd)?.let {
-      println("Your score: ${game.score(game.currentPlayer)}")
+      game.players.map { "${it.name}: ${game.score(it)}" }.forEach { println(it) }
       return PhaseResult.Ready
     }
 
