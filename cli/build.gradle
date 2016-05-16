@@ -5,8 +5,10 @@ dependencies {
   compile project(':core')
 
   compile deps.kotlin_stdlib
+  compile deps.kotlin_reflect
 
   testCompile deps.junit
+  testCompile deps.truth
 }
 
 sourceSets {

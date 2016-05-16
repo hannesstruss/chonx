@@ -4,6 +4,7 @@ ext {
 
 ext.deps = [
     kotlin_stdlib: "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
+    kotlin_reflect: "compile 'org.jetbrains.kotlin:kotlin-reflect:$kotlin_version",
 
     junit: 'junit:junit:4.12',
     truth: 'com.google.truth:truth:0.28'
