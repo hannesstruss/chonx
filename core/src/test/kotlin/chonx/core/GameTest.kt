@@ -29,9 +29,9 @@ class GameTest {
     val move = game.roll(die)
     val updatedGame = game.move(move, Slot.ACES)
 
-    assertThat(updatedGame.isLegalMove(hannes, Slot.ACES)).isFalse()
+    assertThat(updatedGame.isSlotFree(hannes, Slot.ACES)).isFalse()
 
-    expect.expect(IllegalMoveException::class.java)
+    expect.expect(SlotAlreadyFilledException::class.java)
     updatedGame.move(updatedGame.roll(die), Slot.ACES)
   }
 
@@ -39,7 +39,7 @@ class GameTest {
     val game = Game(players, hannes)
     val move = MoveInProgress.start(felix)
 
-    assertThat(game.isLegalMove(move.player, Slot.ACES)).isFalse()
+    assertThat(game.canMove(move.player)).isFalse()
 
     expect.expect(IllegalMoveException::class.java)
     game.move(move, Slot.ACES)

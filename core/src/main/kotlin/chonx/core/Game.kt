@@ -21,8 +21,12 @@ data class Game constructor(val players: List<Player>,
   }
 
   fun move(moveInProgress: MoveInProgress, slot: Slot): Game {
-    if (!isLegalMove(moveInProgress.player, slot)) {
-      throw IllegalMoveException("${moveInProgress.player}/${slot}")
+    if (!canMove(moveInProgress.player)) {
+      throw IllegalMoveException("It's not ${moveInProgress.player}'s turn")
+    }
+
+    if (!isSlotFree(moveInProgress.player, slot)) {
+      throw SlotAlreadyFilledException("Slot already filled for ${moveInProgress.player.name}: ${slot.name}")
     }
 
     val move = Move(currentPlayer, slot, DiceRoll.fromList(moveInProgress.dice()))
@@ -40,9 +44,10 @@ data class Game constructor(val players: List<Player>,
 
   fun score(player: Player) = calculateScore(moves, player)
 
-  fun isLegalMove(player: Player, slot: Slot) =
-      player == currentPlayer &&
-          moves.filter { it.player == currentPlayer && it.slot == slot }.isEmpty()
+  fun canMove(player: Player) = player == currentPlayer
+
+  fun isSlotFree(player: Player, slot: Slot) =
+          moves.filter { it.player == player && it.slot == slot }.isEmpty()
 
   fun hasEnded() =
       moves.isNotEmpty() && moves
