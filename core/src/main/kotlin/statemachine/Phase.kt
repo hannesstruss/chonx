@@ -1,4 +1,4 @@
-package chonx.cli2
+package statemachine
 
 import chonx.core.Game
 import chonx.core.MoveInProgress

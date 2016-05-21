@@ -1,4 +1,4 @@
-package chonx.cli2
+package chonx.statemachine
 
 import chonx.core.DiceRoll
 import chonx.core.Game
@@ -10,6 +10,9 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
+import statemachine.Command
+import statemachine.Phase
+import statemachine.StateMachine
 
 class StateMachineTest {
   @Rule @JvmField val expect = ExpectedException.none()

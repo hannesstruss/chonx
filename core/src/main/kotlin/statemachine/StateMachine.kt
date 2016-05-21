@@ -1,33 +1,21 @@
-package chonx.cli2
+package statemachine
 
-import chonx.cli2.Command.AddPlayer
-import chonx.cli2.Command.BeginGame
-import chonx.cli2.Phase.CollectPlayers
 import chonx.core.Die
 import chonx.core.Game
 import chonx.core.PreGame
 import chonx.core.RandomDie
-
-class Reducer<P : Phase, C : Command>(
-    val phaseClass: Class<P>,
-    val commandClass: Class<C>,
-    val reduceFunc: (P, C) -> Phase
-) {
-  @Suppress("UNCHECKED_CAST")
-  fun reduce(phase: Phase, command: Command): Phase {
-    return reduceFunc(phase as P, command as C)
-  }
-}
-
-private inline fun <reified P : Phase, reified C : Command> reducer(noinline reduceFunc: (P, C) -> Phase): Reducer<P, C> {
-  return Reducer(P::class.java, C::class.java, reduceFunc)
-}
-
+import statemachine.Command.AddPlayer
+import statemachine.Command.BeginGame
+import statemachine.Phase.CollectPlayers
 
 @Suppress("UNCHECKED_CAST")
 class StateMachine(val phase: Phase, val die: Die) {
   companion object {
-    fun new(die: Die = RandomDie()) = StateMachine(CollectPlayers(PreGame.new()), die)
+    fun new(die: Die = RandomDie()) = StateMachine(CollectPlayers(PreGame.Companion.new()), die)
+
+    private inline fun <reified P : Phase, reified C : Command> reducer(noinline reduceFunc: (P, C) -> Phase): Reducer<P, C> {
+      return Reducer(P::class.java, C::class.java, reduceFunc)
+    }
   }
 
   private val reducers = listOf(
@@ -37,7 +25,7 @@ class StateMachine(val phase: Phase, val die: Die) {
       },
 
       reducer<CollectPlayers, BeginGame> { phase, command ->
-        Phase.InGame(Game.new(phase.preGame.players()))
+        Phase.InGame(Game.Companion.new(phase.preGame.players()))
       },
 
       reducer<Phase.InGame, Command.RollDice> { phase, command ->
