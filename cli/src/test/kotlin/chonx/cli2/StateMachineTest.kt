@@ -1,10 +1,12 @@
 package chonx.cli2
 
+import chonx.core.DiceRoll
 import chonx.core.Game
+import chonx.core.Move
 import chonx.core.Player
+import chonx.core.Slot
 import chonx.core.TestDie
 import com.google.common.truth.Truth.assertThat
-import org.junit.Assert.fail
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
@@ -91,10 +93,28 @@ class StateMachineTest {
   }
 
   @Test fun `it should pick a slot and move to InGame`() {
-    fail()
+    val player = gameWithPlayers.currentPlayer
+    val move = gameWithPlayers.roll(testDie)
+    val initialPhase = Phase.PickSlot(gameWithPlayers, move)
+    val nextPhase: Phase.InGame = StateMachine(initialPhase, testDie)
+        .handle(Command.PickSlot(Slot.CHANCE))
+        .phase()
+
+    assertThat(nextPhase.game.score(player)).isGreaterThan(0)
   }
 
   @Test fun `it should end the game when all slots are filled`() {
-    fail()
+    val player = Player("Hannes")
+    val almostAllMoves = Slot.values()
+        .filter { it != Slot.CHANCE }
+        .map { Move(player, it, DiceRoll(1, 1, 1, 1, 1)) }
+    val almostFinishedGame = Game(listOf(player), player, almostAllMoves)
+    val initialPhase = Phase.PickSlot(almostFinishedGame, almostFinishedGame.roll(testDie))
+    val nextPhase: Phase.Ended =
+        StateMachine(initialPhase, testDie).handle(Command.PickSlot(Slot.CHANCE)).phase()
+
+    assertThat(nextPhase.game.hasEnded()).isTrue()
+    assertThat(nextPhase.game.score(player)).isGreaterThan(0)
+    assertThat(nextPhase.game.getSlotOptions(player)).isEmpty()
   }
 }

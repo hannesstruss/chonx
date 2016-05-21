@@ -62,6 +62,15 @@ class StateMachine(val phase: Phase, val die: Die) {
         } else {
           Phase.PickSlot(phase.game, phase.moveInProgress.roll())
         }
+      },
+
+      reducer<Phase.PickSlot, Command.PickSlot> { phase, command ->
+        val nextGame = phase.game.move(phase.moveInProgress, command.slot)
+        if (nextGame.hasEnded()) {
+          Phase.Ended(nextGame)
+        } else {
+          Phase.InGame(nextGame)
+        }
       }
 
   ).map { reducer ->
