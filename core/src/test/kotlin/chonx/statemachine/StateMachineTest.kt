@@ -84,13 +84,25 @@ class StateMachineTest {
     assertThat(phase.moveInProgress.dice().toSet()).isNotEqualTo(initialMove.dice().toSet())
   }
 
+  @Test fun `it should allow accepting dice`() {
+    val move = gameWithPlayers.roll(testDie)
+    val movePhase = Phase.InMove(gameWithPlayers, move)
+    val resultPhase: Phase.PickSlot = StateMachine(movePhase, testDie)
+        .handle(Command.AcceptDice())
+        .phase()
+
+    assertThat(resultPhase.moveInProgress).isEqualTo(move)
+  }
+
   @Test fun `it should automatically move to PickSlot after the last roll`() {
     var move = gameWithPlayers.roll(testDie)
     while (move.rollsLeft >= 2) {
       move = move.roll() // 1 roll left now
     }
     val movePhase = Phase.InMove(gameWithPlayers, move)
-    val resultPhase: Phase.PickSlot = StateMachine(movePhase, testDie).handle(Command.RollDice()).phase()
+    val resultPhase: Phase.PickSlot = StateMachine(movePhase, testDie)
+        .handle(Command.RollDice())
+        .phase()
 
     assertThat(resultPhase.moveInProgress.rollsLeft).isEqualTo(0)
   }
