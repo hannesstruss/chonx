@@ -1,4 +1,4 @@
-package statemachine
+package chonx.statemachine
 
 import chonx.core.Slot
 

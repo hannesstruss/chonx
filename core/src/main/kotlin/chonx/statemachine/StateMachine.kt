@@ -1,12 +1,12 @@
-package statemachine
+package chonx.statemachine
 
 import chonx.core.Die
 import chonx.core.Game
 import chonx.core.PreGame
 import chonx.core.RandomDie
-import statemachine.Command.AddPlayer
-import statemachine.Command.BeginGame
-import statemachine.Phase.CollectPlayers
+import chonx.statemachine.Command.AddPlayer
+import chonx.statemachine.Command.BeginGame
+import chonx.statemachine.Phase.CollectPlayers
 
 class StateMachine(val phase: Phase, val die: Die) {
   companion object {

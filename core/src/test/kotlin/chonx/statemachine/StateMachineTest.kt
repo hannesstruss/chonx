@@ -10,9 +10,9 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
-import statemachine.Command
-import statemachine.Phase
-import statemachine.StateMachine
+import chonx.statemachine.Command
+import chonx.statemachine.Phase
+import chonx.statemachine.StateMachine
 
 class StateMachineTest {
   @Rule @JvmField val expect = ExpectedException.none()

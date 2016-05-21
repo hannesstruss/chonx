@@ -1,4 +1,4 @@
-package statemachine
+package chonx.statemachine
 
 class Reducer<P : Phase, C : Command>(
     val phaseClass: Class<P>,

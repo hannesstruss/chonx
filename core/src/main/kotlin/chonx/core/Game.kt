@@ -22,7 +22,7 @@ data class Game constructor(val players: List<Player>,
 
   fun move(moveInProgress: MoveInProgress, slot: Slot): Game {
     if (!isLegalMove(moveInProgress.player, slot)) {
-      throw IllegalArgumentException("Illegal move: ${moveInProgress.player}/${slot}")
+      throw IllegalMoveException("${moveInProgress.player}/${slot}")
     }
 
     val move = Move(currentPlayer, slot, DiceRoll.fromList(moveInProgress.dice()))
