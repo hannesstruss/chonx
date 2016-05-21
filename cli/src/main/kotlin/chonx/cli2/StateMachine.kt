@@ -25,7 +25,7 @@ private inline fun <reified P : Phase, reified C : Command> reducer(noinline red
 
 
 @Suppress("UNCHECKED_CAST")
-data class StateMachine(val phase: Phase, val die: Die) {
+class StateMachine(val phase: Phase, val die: Die) {
   companion object {
     fun new(die: Die = RandomDie()) = StateMachine(CollectPlayers(PreGame.new()), die)
   }
