@@ -72,10 +72,9 @@ class StateMachine(val phase: Phase, val die: Die) {
 
   fun <P : Phase> phase(): P = phase as P
 
-  @Suppress("UNCHECKED_CAST")
-  private fun <P : Phase> reduce(phase: Phase, command: Command): P {
+  private fun reduce(phase: Phase, command: Command): Phase {
     reducers.get(phase.javaClass to command.javaClass)?.let {
-      return it.reduce(phase, command) as P
+      return it.reduce(phase, command)
     }
 
     throw IllegalStateException("${phase} + ${command} can't be handled")
