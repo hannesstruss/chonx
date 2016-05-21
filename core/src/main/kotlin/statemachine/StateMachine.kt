@@ -8,7 +8,6 @@ import statemachine.Command.AddPlayer
 import statemachine.Command.BeginGame
 import statemachine.Phase.CollectPlayers
 
-@Suppress("UNCHECKED_CAST")
 class StateMachine(val phase: Phase, val die: Die) {
   companion object {
     fun new(die: Die = RandomDie()) = StateMachine(CollectPlayers(PreGame.Companion.new()), die)
@@ -71,6 +70,7 @@ class StateMachine(val phase: Phase, val die: Die) {
 
   fun handle(command: Command): StateMachine = StateMachine(reduce(phase, command), die)
 
+  @Suppress("UNCHECKED_CAST")
   fun <P : Phase> phase(): P = phase as P
 
   private fun reduce(phase: Phase, command: Command): Phase {
