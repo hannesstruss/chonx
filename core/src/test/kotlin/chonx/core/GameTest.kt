@@ -1,13 +1,6 @@
 package chonx.core
 
-import chonx.core.DiceRoll
-import chonx.core.Game
-import chonx.core.MoveInProgress
-import chonx.core.Player
-import chonx.core.Slot
-import chonx.core.TestDie
 import com.google.common.truth.Truth.assertThat
-import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
@@ -18,27 +11,28 @@ class GameTest {
   val hannes = Player("hannes")
   val felix = Player("felix")
   val players = listOf(hannes, felix)
+  val die: Die = TestDie()
 
   @Test fun `should move to next player after move`() {
     val game = Game(players, hannes)
     assertThat(game.currentPlayer).isEqualTo(hannes)
 
-    val nextGame = game.move(game.roll(), Slot.ACES)
+    val nextGame = game.move(game.roll(die), Slot.ACES)
     assertThat(nextGame.currentPlayer).isEqualTo(felix)
 
-    val thirdGame = nextGame.move(nextGame.roll(), Slot.CHANCE)
+    val thirdGame = nextGame.move(nextGame.roll(die), Slot.CHANCE)
     assertThat(thirdGame.currentPlayer).isEqualTo(hannes)
   }
 
   @Test fun `should not allow move if player has filled the slot already`() {
     val game = Game(listOf(hannes), hannes)
-    val move = game.roll()
+    val move = game.roll(die)
     val updatedGame = game.move(move, Slot.ACES)
 
     assertThat(updatedGame.isLegalMove(hannes, Slot.ACES)).isFalse()
 
     expect.expect(IllegalArgumentException::class.java)
-    updatedGame.move(updatedGame.roll(), Slot.ACES)
+    updatedGame.move(updatedGame.roll(die), Slot.ACES)
   }
 
   @Test fun `should not allow player to take turn whos turn it is not`() {
@@ -57,7 +51,7 @@ class GameTest {
 
     Slot.values().forEach { slot ->
       players.forEach {
-        game = game.move(game.roll(), slot)
+        game = game.move(game.roll(die), slot)
       }
     }
 

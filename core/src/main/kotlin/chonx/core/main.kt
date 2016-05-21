@@ -7,7 +7,7 @@ fun main(args: Array<String>) {
 
   var game = Game.new(preGame.players())
 
-  var move = game.roll()
+  var move = game.roll(RandomDie())
   move = move.lock(0)
   move = move.lock(1)
   move = move.roll()

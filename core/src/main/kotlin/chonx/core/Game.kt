@@ -4,14 +4,13 @@ import java.util.Collections
 
 data class Game constructor(val players: List<Player>,
                             val currentPlayer: Player,
-                            private val moves: List<Move> = listOf(),
-                            private val die: Die = RandomDie()) {
+                            private val moves: List<Move> = listOf()) {
 
   companion object {
-    fun new(players: Set<Player>, die: Die = RandomDie()): Game {
+    fun new(players: Set<Player>): Game {
       val playerList = players.toMutableList()
       Collections.shuffle(playerList)
-      return Game(playerList, playerList[0], listOf(), die)
+      return Game(playerList, playerList[0], listOf())
     }
   }
 
@@ -32,7 +31,7 @@ data class Game constructor(val players: List<Player>,
     return copy(currentPlayer = nextPlayer, moves = moves + move)
   }
 
-  fun roll() = MoveInProgress.start(currentPlayer, die)
+  fun roll(die: Die) = MoveInProgress.start(currentPlayer, die)
 
   fun getSlotOptions(player: Player): Set<Slot> {
     return Slot.values().toSet().minus(
