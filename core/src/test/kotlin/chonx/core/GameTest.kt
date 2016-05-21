@@ -41,7 +41,7 @@ class GameTest {
 
     assertThat(game.isLegalMove(move.player, Slot.ACES)).isFalse()
 
-    expect.expect(IllegalArgumentException::class.java)
+    expect.expect(IllegalMoveException::class.java)
     game.move(move, Slot.ACES)
   }
 

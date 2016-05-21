@@ -2,6 +2,7 @@ package chonx.statemachine
 
 import chonx.core.Die
 import chonx.core.Game
+import chonx.core.IllegalMoveException
 import chonx.core.PreGame
 import chonx.core.RandomDie
 import chonx.statemachine.Command.AddPlayer
@@ -43,7 +44,7 @@ class StateMachine(val phase: Phase, val die: Die) {
 
       reducer<Phase.InMove, Command.RollDice> { phase, command ->
         if (phase.moveInProgress.rollsLeft <= 0) {
-          throw IllegalStateException("MoveInProgress has no rolls left")
+          throw IllegalMoveException("MoveInProgress has no rolls left")
         } else if (phase.moveInProgress.rollsLeft > 1) {
           Phase.InMove(phase.game, phase.moveInProgress.roll())
         } else {
@@ -78,6 +79,6 @@ class StateMachine(val phase: Phase, val die: Die) {
       return it.reduce(phase, command)
     }
 
-    throw IllegalStateException("${phase} + ${command} can't be handled")
+    throw IllegalMoveException("${phase} + ${command} can't be handled")
   }
 }

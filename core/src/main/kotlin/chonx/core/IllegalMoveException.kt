@@ -1,3 +1,3 @@
 package chonx.core
 
-class IllegalMoveException(message: String) : IllegalArgumentException(message)
+class IllegalMoveException(message: String) : IllegalStateException(message)

@@ -2,6 +2,7 @@ package chonx.statemachine
 
 import chonx.core.DiceRoll
 import chonx.core.Game
+import chonx.core.IllegalMoveException
 import chonx.core.Move
 import chonx.core.Player
 import chonx.core.Slot
@@ -10,9 +11,6 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
-import chonx.statemachine.Command
-import chonx.statemachine.Phase
-import chonx.statemachine.StateMachine
 
 class StateMachineTest {
   @Rule @JvmField val expect = ExpectedException.none()
@@ -24,7 +22,7 @@ class StateMachineTest {
     val game = Game.new(setOf(Player("Hannes")))
     val state = StateMachine(Phase.InMove(game, game.roll(testDie)), testDie)
 
-    expect.expect(IllegalStateException::class.java)
+    expect.expect(IllegalMoveException::class.java)
     state.handle(Command.AddPlayer("Dieter"))
   }
 
