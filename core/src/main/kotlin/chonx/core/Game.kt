@@ -3,14 +3,15 @@ package chonx.core
 import java.util.Collections
 
 data class Game constructor(val players: List<Player>,
-                       val currentPlayer: Player,
-                       private val moves: List<Move> = listOf()) {
+                            val currentPlayer: Player,
+                            private val moves: List<Move> = listOf(),
+                            private val die: Die = RandomDie()) {
 
   companion object {
-    fun new(players: Set<Player>): Game {
+    fun new(players: Set<Player>, die: Die = RandomDie()): Game {
       val playerList = players.toMutableList()
       Collections.shuffle(playerList)
-      return Game(playerList, playerList[0], listOf())
+      return Game(playerList, playerList[0], listOf(), die)
     }
   }
 
@@ -31,7 +32,7 @@ data class Game constructor(val players: List<Player>,
     return copy(currentPlayer = nextPlayer, moves = moves + move)
   }
 
-  fun roll() = MoveInProgress.start(currentPlayer)
+  fun roll() = MoveInProgress.start(currentPlayer, die)
 
   fun getSlotOptions(player: Player): Set<Slot> {
     return Slot.values().toSet().minus(
