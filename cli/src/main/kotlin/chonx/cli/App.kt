@@ -1,5 +1,6 @@
 package chonx.cli
 
+import chonx.core.IllegalMoveException
 import chonx.statemachine.Command
 import chonx.statemachine.Phase
 import chonx.statemachine.StateMachine
@@ -41,6 +42,9 @@ fun main(args: Array<String>) {
       val cmd = parse(input.trim())
       state = state.handle(cmd)
     } catch (e: ParseException) {
+      println(e.message)
+      continue
+    } catch (e: IllegalMoveException) {
       println(e.message)
       continue
     }
