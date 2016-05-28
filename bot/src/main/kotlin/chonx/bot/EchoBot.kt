@@ -5,7 +5,13 @@ import chonx.bot.telegram.types.KeyboardButton
 import chonx.bot.telegram.types.ReplyKeyboardMarkup
 import chonx.bot.telegram.types.Update
 
-class EchoBot(private val telegram: Telegram) : Bot() {
+class EchoBot(private val telegram: Telegram, private val runner: BotRunner) : Bot() {
+  fun start() {
+    runner.updates().subscribe {
+      onUpdate(it)
+    }
+  }
+
   override fun onUpdate(update: Update) {
     update.message?.let { msg ->
       val keyboard = ReplyKeyboardMarkup(listOf(

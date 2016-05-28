@@ -8,6 +8,10 @@ data class Game constructor(val players: List<Player>,
 
   companion object {
     fun new(players: Set<Player>): Game {
+      if (players.size == 0) {
+        throw NotEnoughPlayersException()
+      }
+
       val playerList = players.toMutableList()
       Collections.shuffle(playerList)
       return Game(playerList, playerList[0], listOf())

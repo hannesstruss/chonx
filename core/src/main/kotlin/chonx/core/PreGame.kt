@@ -5,7 +5,7 @@ data class PreGame private constructor(val players: Set<Player>) {
     fun new() = PreGame(setOf())
   }
 
-  fun addPlayer(name: String) = copy(players = players + Player(name))
+  fun addPlayer(player: Player) = copy(players = players + player)
 
   fun players() = players
 

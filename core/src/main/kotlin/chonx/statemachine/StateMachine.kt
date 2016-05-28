@@ -21,11 +21,11 @@ class StateMachine(val phase: Phase, val die: Die) {
   private val reducers = listOf(
 
       reducer<CollectPlayers, AddPlayer> { phase, command ->
-        CollectPlayers(phase.preGame.addPlayer(command.name))
+        CollectPlayers(phase.preGame.addPlayer(command.player))
       },
 
       reducer<CollectPlayers, BeginGame> { phase, command ->
-        Phase.InGame(Game.Companion.new(phase.preGame.players()))
+        Phase.InGame(Game.new(phase.preGame.players()))
       },
 
       reducer<Phase.InGame, Command.RollDice> { phase, command ->

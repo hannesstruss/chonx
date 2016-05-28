@@ -2,8 +2,8 @@ package chonx.core
 
 fun main(args: Array<String>) {
   val preGame = PreGame.new()
-      .addPlayer("hannesstruss")
-      .addPlayer("felixgoldstein")
+      .addPlayer(Player("hannesstruss"))
+      .addPlayer(Player("felixgoldstein"))
 
   var game = Game.new(preGame.players())
 

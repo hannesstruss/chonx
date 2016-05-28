@@ -3,6 +3,7 @@ apply plugin: 'application'
 
 dependencies {
   compile project(':core')
+  compile project(':bot')
 
   compile deps.kotlin_stdlib
   compile deps.kotlin_reflect
@@ -17,7 +18,10 @@ sourceSets {
   test.java.srcDirs += 'src/test/kotlin'
 }
 
+def chonxBotToken = project.properties["chonxBotToken"] ?: "no-token"
+
 mainClassName = 'chonx.cli.AppKt'
+applicationDefaultJvmArgs = ["-Dchonx.bot=${chonxBotToken}"]
 
 run {
   standardInput = System.in

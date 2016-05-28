@@ -3,9 +3,34 @@ package chonx.bot.telegram
 import chonx.bot.AuthException
 import chonx.bot.telegram.requests.SendMessage
 import chonx.bot.telegram.types.*
+import okhttp3.OkHttpClient
 import retrofit2.Call
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.util.concurrent.TimeUnit
 
 class Telegram(private val api: TelegramApi) {
+  companion object {
+    fun fromToken(botToken: String): Telegram {
+      val okClient = OkHttpClient.Builder()
+          .followRedirects(false)
+          .readTimeout(1, TimeUnit.MINUTES)
+          .connectTimeout(1, TimeUnit.MINUTES)
+          .build()
+
+      val api = Retrofit.Builder()
+          .baseUrl("https://api.telegram.org/bot${botToken}/")
+          .client(okClient)
+          .addConverterFactory(ScalarsConverterFactory.create())
+          .addConverterFactory(MoshiConverterFactory.create())
+          .build()
+          .create(TelegramApi::class.java)
+
+      return Telegram(api)
+    }
+  }
+
   fun getMe(): User = api.getMe().executeOrFail()
 
   fun getUpdates(offset: Long = 0, timeout: Int = 0): List<Update> =

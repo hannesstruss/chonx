@@ -5,12 +5,14 @@ import chonx.bot.telegram.types.Update
 import rx.Observable
 
 class Updates(private val telegram: Telegram) {
+  private val updates = call().share()
+
   companion object {
     val Timeout = 30
   }
 
   fun updates(): Observable<Update> {
-    return call()
+    return updates
   }
 
   private fun call(offset: Long = 0): Observable<Update> {
