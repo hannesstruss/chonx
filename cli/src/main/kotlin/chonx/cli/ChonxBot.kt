@@ -33,11 +33,11 @@ class ChonxBot(val telegram: Telegram, val runner: BotRunner) {
 
   private fun createLoop(chatId: Int): GameLoop {
     return GameLoop({ player, msg ->
-      telegram.sendMessage(chatId, msg)
+      telegram.sendMessage(chatId, "@${player.username}: ${msg}")
     })
   }
 
-  private fun player(user: User) = Player(user.first_name)
+  private fun player(user: User) = Player(user.first_name, user.username!!)
 
   private fun sanitize(message: Message): String {
     var msg = message.text.toString()

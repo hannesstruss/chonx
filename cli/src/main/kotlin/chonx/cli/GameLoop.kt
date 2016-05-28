@@ -13,13 +13,12 @@ class GameLoop(private val send: (Player, String) -> Unit) {
   private var state = StateMachine.new()
 
   fun start() {
-    status()
   }
 
   fun handle(player: Player, command: Command) {
     try {
       state = state.handle(player, command)
-      status()
+      status(player)
     } catch (e: NotYourTurnException) {
       println("Ignoring command, not your turn")
     } catch (e: NotEnoughPlayersException) {
@@ -31,12 +30,12 @@ class GameLoop(private val send: (Player, String) -> Unit) {
     }
   }
 
-  private fun status() {
+  private fun status(player: Player) {
     val phase = state.phase
     if (phase is Phase.CollectPlayers) {
-      send(Player("Hannes"), """Players: ${phase.preGame.players.map { it.name }.joinToString(", ")}""")
+      send(player, """Players: ${phase.preGame.players.map { it.name }.joinToString(", ")}""")
     } else if (phase is Phase.GamePhase) {
-      send(Player("Hannes"), "${phase.javaClass.simpleName} - Current: ${phase.game.currentPlayer.name} (${phase.game.score(phase.game.currentPlayer)})")
+      send(player, "${phase.javaClass.simpleName} - Current: ${phase.game.currentPlayer.name} (${phase.game.score(phase.game.currentPlayer)})")
 
       if (phase is Phase.MovePhase) {
         val msg = phase.moveInProgress.dice()
@@ -47,10 +46,10 @@ class GameLoop(private val send: (Player, String) -> Unit) {
                 die.toString()
               }
             }.joinToString(" ")
-        send(Player("Hannes"), msg)
+        send(player, msg)
       }
     } else if (phase is Phase.Ended) {
-      send(Player("Hannes"), "Done!")
+      send(player, "Done!")
     }
   }
 }
