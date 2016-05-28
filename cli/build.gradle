@@ -6,6 +6,7 @@ dependencies {
 
   compile deps.kotlin_stdlib
   compile deps.kotlin_reflect
+  compile deps.rxjava
 
   testCompile deps.junit
   testCompile deps.truth

@@ -7,7 +7,8 @@ ext.deps = [
     kotlin_reflect: "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version",
 
     junit: 'junit:junit:4.12',
-    truth: 'com.google.truth:truth:0.28'
+    truth: 'com.google.truth:truth:0.28',
+    rxjava: 'io.reactivex:rxjava:1.1.5'
 ]
 
 subprojects {
