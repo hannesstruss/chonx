@@ -4,6 +4,7 @@ import chonx.core.DiceRoll
 import chonx.core.Game
 import chonx.core.IllegalMoveException
 import chonx.core.Move
+import chonx.core.NotYourTurnException
 import chonx.core.Player
 import chonx.core.Slot
 import chonx.core.TestDie
@@ -16,34 +17,38 @@ class StateMachineTest {
   @Rule @JvmField val expect = ExpectedException.none()
   val initial = StateMachine.new()
   val testDie = TestDie()
-  val gameWithPlayers = Game.new(setOf(Player("Hannes"), Player("Felix")))
+
+  private val hannes = Player("Hannes")
+  private val felix = Player("Felix")
+
+  val gameWithPlayers = Game(listOf(hannes, felix), hannes)
 
   @Test fun `should throw if the command isnt legal`() {
-    val game = Game.new(setOf(Player("Hannes")))
+    val game = Game.new(setOf(hannes))
     val state = StateMachine(Phase.InMove(game, game.roll(testDie)), testDie)
 
     expect.expect(IllegalMoveException::class.java)
-    state.handle(Command.AddPlayer("Dieter"))
+    state.handle(hannes, Command.AddPlayer("Dieter"))
   }
 
   @Test fun `it should add a player`() {
-    val phase: Phase.CollectPlayers = initial.handle(Command.AddPlayer("Hannes")).phase()
-    assertThat(phase.preGame.players()).containsExactly(Player("Hannes"))
+    val phase: Phase.CollectPlayers = initial.handle(null, Command.AddPlayer("Hannes")).phase()
+    assertThat(phase.preGame.players()).containsExactly(hannes)
   }
 
   @Test fun `it should begin game`() {
     val phase: Phase.InGame = initial
-        .handle(Command.AddPlayer("Hannes"))
-        .handle(Command.BeginGame())
+        .handle(hannes, Command.AddPlayer("Hannes"))
+        .handle(hannes, Command.BeginGame())
         .phase()
 
-    assertThat(phase.game).isEqualTo(Game.new(setOf(Player("Hannes"))))
+    assertThat(phase.game).isEqualTo(Game.new(setOf(hannes)))
   }
 
   @Test fun `it should lock dice`() {
     val moveInProgress = gameWithPlayers.roll(testDie)
     val phase: Phase.InMove = StateMachine(Phase.InMove(gameWithPlayers, moveInProgress), testDie)
-        .handle(Command.LockDice(listOf(0, 2)))
+        .handle(hannes, Command.LockDice(listOf(0, 2)))
         .phase()
 
     assertThat(phase.moveInProgress.isLocked(0)).isTrue()
@@ -57,7 +62,7 @@ class StateMachineTest {
   @Test fun `it should unlock dice`() {
     val moveInProgress = gameWithPlayers.roll(testDie).lock(0).lock(2)
     val phase: Phase.InMove = StateMachine(Phase.InMove(gameWithPlayers, moveInProgress), testDie)
-        .handle(Command.UnlockDice(listOf(2)))
+        .handle(hannes, Command.UnlockDice(listOf(2)))
         .phase()
 
     assertThat(phase.moveInProgress.isLocked(0)).isTrue()
@@ -66,7 +71,7 @@ class StateMachineTest {
 
   @Test fun `it should roll from InGame`() {
     val phase: Phase.InMove = StateMachine(Phase.InGame(gameWithPlayers), testDie)
-        .handle(Command.RollDice())
+        .handle(hannes, Command.RollDice())
         .phase()
 
     assertThat(phase.moveInProgress.player).isEqualTo(gameWithPlayers.currentPlayer)
@@ -76,7 +81,7 @@ class StateMachineTest {
     val initialMove = gameWithPlayers.roll(testDie)
     testDie.result = 3
     val phase: Phase.InMove = StateMachine(Phase.InMove(gameWithPlayers, initialMove), testDie)
-        .handle(Command.RollDice())
+        .handle(hannes, Command.RollDice())
         .phase()
 
     assertThat(phase.moveInProgress.dice().toSet()).isNotEqualTo(initialMove.dice().toSet())
@@ -86,7 +91,7 @@ class StateMachineTest {
     val move = gameWithPlayers.roll(testDie)
     val movePhase = Phase.InMove(gameWithPlayers, move)
     val resultPhase: Phase.PickSlot = StateMachine(movePhase, testDie)
-        .handle(Command.AcceptDice())
+        .handle(hannes, Command.AcceptDice())
         .phase()
 
     assertThat(resultPhase.moveInProgress).isEqualTo(move)
@@ -99,7 +104,7 @@ class StateMachineTest {
     }
     val movePhase = Phase.InMove(gameWithPlayers, move)
     val resultPhase: Phase.PickSlot = StateMachine(movePhase, testDie)
-        .handle(Command.RollDice())
+        .handle(hannes, Command.RollDice())
         .phase()
 
     assertThat(resultPhase.moveInProgress.rollsLeft).isEqualTo(0)
@@ -110,24 +115,31 @@ class StateMachineTest {
     val move = gameWithPlayers.roll(testDie)
     val initialPhase = Phase.PickSlot(gameWithPlayers, move)
     val nextPhase: Phase.InGame = StateMachine(initialPhase, testDie)
-        .handle(Command.PickSlot(Slot.CHANCE))
+        .handle(hannes, Command.PickSlot(Slot.CHANCE))
         .phase()
 
     assertThat(nextPhase.game.score(player)).isGreaterThan(0)
   }
 
   @Test fun `it should end the game when all slots are filled`() {
-    val player = Player("Hannes")
+    val player = hannes
     val almostAllMoves = Slot.values()
         .filter { it != Slot.CHANCE }
         .map { Move(player, it, DiceRoll(1, 1, 1, 1, 1)) }
     val almostFinishedGame = Game(listOf(player), player, almostAllMoves)
     val initialPhase = Phase.PickSlot(almostFinishedGame, almostFinishedGame.roll(testDie))
     val nextPhase: Phase.Ended =
-        StateMachine(initialPhase, testDie).handle(Command.PickSlot(Slot.CHANCE)).phase()
+        StateMachine(initialPhase, testDie).handle(hannes, Command.PickSlot(Slot.CHANCE)).phase()
 
     assertThat(nextPhase.game.hasEnded()).isTrue()
     assertThat(nextPhase.game.score(player)).isGreaterThan(0)
     assertThat(nextPhase.game.getSlotOptions(player)).isEmpty()
+  }
+
+  @Test fun `it should throw if player given is not the current player`() {
+    val state = StateMachine(Phase.InGame(gameWithPlayers), testDie)
+
+    expect.expect(NotYourTurnException::class.java)
+    state.handle(felix, Command.RollDice())
   }
 }

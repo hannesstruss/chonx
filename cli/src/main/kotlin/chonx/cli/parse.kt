@@ -11,7 +11,7 @@ val PickRegex = """pick (\w+)""".toRegex()
 
 fun parse(cmd: String, player: Player): Command {
   AddPlayerRegex.find(cmd)?.let {
-    return Command.AddPlayer(Player(it.groupValues[1]))
+    return Command.AddPlayer(it.groupValues[1])
   }
 
   UnlockRegex.find(cmd)?.let {
@@ -34,7 +34,7 @@ fun parse(cmd: String, player: Player): Command {
   }
 
   return when (cmd) {
-    "addme" -> Command.AddPlayer(player)
+    "addme" -> Command.AddPlayer(player.name)
     "begin" -> Command.BeginGame()
     "roll" -> Command.RollDice()
     "accept" -> Command.AcceptDice()

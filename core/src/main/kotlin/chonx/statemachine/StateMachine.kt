@@ -3,6 +3,8 @@ package chonx.statemachine
 import chonx.core.Die
 import chonx.core.Game
 import chonx.core.IllegalMoveException
+import chonx.core.NotYourTurnException
+import chonx.core.Player
 import chonx.core.PreGame
 import chonx.core.RandomDie
 import chonx.statemachine.Command.AddPlayer
@@ -69,7 +71,13 @@ class StateMachine(val phase: Phase, val die: Die) {
     Pair(reducer.phaseClass, reducer.commandClass) to reducer
   }.toMap()
 
-  fun handle(command: Command): StateMachine = StateMachine(reduce(phase, command), die)
+  fun handle(player: Player?, command: Command): StateMachine {
+    if (phase is Phase.GamePhase && player != phase.game.currentPlayer) {
+      throw NotYourTurnException()
+    }
+
+    return StateMachine(reduce(phase, command), die)
+  }
 
   @Suppress("UNCHECKED_CAST")
   fun <P : Phase> phase(): P = phase as P
