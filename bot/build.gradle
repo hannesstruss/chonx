@@ -11,6 +11,7 @@ dependencies {
   compile deps.rxjava
 
   testCompile deps.junit
+  testCompile deps.truth
 }
 
 sourceSets {
