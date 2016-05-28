@@ -27,6 +27,9 @@ fun main(args: Array<String>) {
             }.joinToString(" ")
         println(msg)
       }
+    } else if (phase is Phase.Ended) {
+      println("Done!")
+      System.exit(0)
     }
 
     print("> ")
