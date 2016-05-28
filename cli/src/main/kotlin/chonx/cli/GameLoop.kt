@@ -2,6 +2,7 @@ package chonx.cli
 
 import chonx.core.IllegalMoveException
 import chonx.core.NotEnoughPlayersException
+import chonx.core.NotYourTurnException
 import chonx.core.Player
 import chonx.core.SlotAlreadyFilledException
 import chonx.statemachine.Command
@@ -9,15 +10,17 @@ import chonx.statemachine.Phase
 import chonx.statemachine.StateMachine
 import rx.Observable
 
-class GameLoop(private val commands: Observable<Command>,
+class GameLoop(private val commands: Observable<Pair<Player, Command>>,
                private val send: (Player, String) -> Unit) {
   private var state = StateMachine.new()
 
   fun start() {
     status()
-    commands.subscribe {
+    commands.subscribe { pair ->
       try {
-        state = state.handle(it)
+        state = state.handle(pair.first, pair.second)
+      } catch (e: NotYourTurnException) {
+        println("Ignoring command, not your turn")
       } catch (e: NotEnoughPlayersException) {
         println("Not enough players")
       } catch (e: IllegalMoveException) {

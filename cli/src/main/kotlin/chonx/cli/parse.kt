@@ -9,7 +9,7 @@ val LockRegex = """lock (\d(, \d)*)""".toRegex()
 val UnlockRegex = """unlock (\d(, \d)*)""".toRegex()
 val PickRegex = """pick (\w+)""".toRegex()
 
-fun parse(cmd: String, player: Player): Command {
+fun parse(cmd: String, playerName: String): Command {
   AddPlayerRegex.find(cmd)?.let {
     return Command.AddPlayer(it.groupValues[1])
   }
@@ -34,7 +34,7 @@ fun parse(cmd: String, player: Player): Command {
   }
 
   return when (cmd) {
-    "addme" -> Command.AddPlayer(player.name)
+    "addme" -> Command.AddPlayer(playerName)
     "begin" -> Command.BeginGame()
     "roll" -> Command.RollDice()
     "accept" -> Command.AcceptDice()
