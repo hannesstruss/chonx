@@ -4,7 +4,12 @@ import chonx.bot.telegram.types.KeyboardButton
 import chonx.bot.telegram.types.ReplyKeyboardMarkup
 
 class KeyboardBuilder internal constructor() {
+
   private val rows: MutableList<List<KeyboardButton>> = mutableListOf()
+
+  public var resize_keyboard: Boolean? = null
+  public var one_time_keyboard: Boolean? = null
+  public var selective: Boolean? = null
 
   fun row(init: RowBuilder.() -> Unit) {
     val rowBuilder = RowBuilder()
@@ -12,7 +17,8 @@ class KeyboardBuilder internal constructor() {
     rows.add(rowBuilder.build())
   }
 
-  internal fun build(): ReplyKeyboardMarkup = ReplyKeyboardMarkup(rows)
+  internal fun build(): ReplyKeyboardMarkup = ReplyKeyboardMarkup(
+      rows, resize_keyboard, one_time_keyboard, selective)
 }
 
 class RowBuilder internal constructor() {

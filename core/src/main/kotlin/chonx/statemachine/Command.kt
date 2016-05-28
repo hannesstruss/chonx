@@ -4,7 +4,7 @@ import chonx.core.Player
 import chonx.core.Slot
 
 sealed class Command {
-  class AddPlayer(val player: String) : Command()
+  class AddPlayer(val player: Player) : Command()
   class BeginGame() : Command()
   class RollDice() : Command()
   class LockDice(val indices: List<Int>) : Command()

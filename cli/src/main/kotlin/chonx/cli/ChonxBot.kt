@@ -3,6 +3,7 @@ package chonx.cli;
 import chonx.bot.BotRunner
 import chonx.bot.telegram.Telegram
 import chonx.bot.telegram.types.Message
+import chonx.bot.telegram.types.ReplyKeyboardMarkup
 import chonx.bot.telegram.types.User
 import chonx.core.Player
 import chonx.statemachine.Command
@@ -23,7 +24,7 @@ class ChonxBot(val telegram: Telegram, val runner: BotRunner) {
 
         if (message.text != null && message.from != null) {
           val player = player(message.from!!)
-          parseSilent(sanitize(message), player.name)?.let {
+          parseSilent(sanitize(message), player)?.let {
             loop.handle(player(message.from!!), it)
           }
         }
@@ -32,12 +33,10 @@ class ChonxBot(val telegram: Telegram, val runner: BotRunner) {
   }
 
   private fun createLoop(chatId: Int): GameLoop {
-    return GameLoop({ player, msg ->
-      telegram.sendMessage(chatId, "@${player.username}: ${msg}")
-    })
+    return GameLoop(TelegramMessageSink(telegram, chatId))
   }
 
-  private fun player(user: User) = Player(user.first_name, user.username!!)
+  private fun player(user: User) = Player(user.first_name, user.username ?: user.first_name)
 
   private fun sanitize(message: Message): String {
     var msg = message.text.toString()
@@ -47,12 +46,19 @@ class ChonxBot(val telegram: Telegram, val runner: BotRunner) {
     return msg
   }
 
-  private fun parseSilent(input: String, player: String): Command? {
+  private fun parseSilent(input: String, player: Player): Command? {
     try {
       return parse(input, player)
     } catch (e: ParseException) {
       println("Can't parse ${input}")
       return null
     }
+  }
+}
+
+class TelegramMessageSink(private val telegram: Telegram,
+                          private val chatId: Int) : MessageSink {
+  override fun send(player: Player, msg: String, keyboard: ReplyKeyboardMarkup?) {
+    telegram.sendMessage(chatId, "@${player.username}: ${msg}", keyboard)
   }
 }

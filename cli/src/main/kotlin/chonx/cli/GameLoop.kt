@@ -1,5 +1,7 @@
 package chonx.cli
 
+import chonx.bot.telegram.keyboard
+import chonx.bot.telegram.types.ReplyKeyboardMarkup
 import chonx.core.IllegalMoveException
 import chonx.core.NotEnoughPlayersException
 import chonx.core.NotYourTurnException
@@ -9,7 +11,7 @@ import chonx.statemachine.Command
 import chonx.statemachine.Phase
 import chonx.statemachine.StateMachine
 
-class GameLoop(private val send: (Player, String) -> Unit) {
+class GameLoop(private val sink: MessageSink) {
   private var state = StateMachine.new()
 
   fun start() {
@@ -33,11 +35,24 @@ class GameLoop(private val send: (Player, String) -> Unit) {
   private fun status(player: Player) {
     val phase = state.phase
     if (phase is Phase.CollectPlayers) {
-      send(player, """Players: ${phase.preGame.players.map { it.name }.joinToString(", ")}""")
+      sink.send(player, """Players: ${phase.preGame.players.map { it.name }.joinToString(", ")}""")
     } else if (phase is Phase.GamePhase) {
-      send(player, "${phase.javaClass.simpleName} - Current: ${phase.game.currentPlayer.name} (${phase.game.score(phase.game.currentPlayer)})")
+      sink.send(player, "${phase.javaClass.simpleName} - Current: ${phase.game.currentPlayer.name} (${phase.game.score(phase.game.currentPlayer)})")
 
       if (phase is Phase.MovePhase) {
+        val kb = keyboard {
+          one_time_keyboard = true
+          selective = true
+
+          row {
+            +"roll"
+            +"accept"
+          }
+          row {
+            (1..5).forEach { +"lock ${it}" }
+          }
+        }
+
         val msg = phase.moveInProgress.dice()
             .mapIndexed { index, die ->
               if (phase.moveInProgress.isLocked(index)) {
@@ -46,10 +61,10 @@ class GameLoop(private val send: (Player, String) -> Unit) {
                 die.toString()
               }
             }.joinToString(" ")
-        send(player, msg)
+        sink.send(player, msg, kb)
       }
     } else if (phase is Phase.Ended) {
-      send(player, "Done!")
+      sink.send(player, "Done!")
     }
   }
 }
