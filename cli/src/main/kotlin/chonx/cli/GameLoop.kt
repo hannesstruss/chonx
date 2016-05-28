@@ -8,27 +8,26 @@ import chonx.core.SlotAlreadyFilledException
 import chonx.statemachine.Command
 import chonx.statemachine.Phase
 import chonx.statemachine.StateMachine
-import rx.Observable
 
-class GameLoop(private val commands: Observable<Pair<Player, Command>>,
-               private val send: (Player, String) -> Unit) {
+class GameLoop(private val send: (Player, String) -> Unit) {
   private var state = StateMachine.new()
 
   fun start() {
     status()
-    commands.subscribe { pair ->
-      try {
-        state = state.handle(pair.first, pair.second)
-      } catch (e: NotYourTurnException) {
-        println("Ignoring command, not your turn")
-      } catch (e: NotEnoughPlayersException) {
-        println("Not enough players")
-      } catch (e: IllegalMoveException) {
-        println(e.message)
-      } catch (e: SlotAlreadyFilledException) {
-        println(e.message)
-      }
+  }
+
+  fun handle(player: Player, command: Command) {
+    try {
+      state = state.handle(player, command)
       status()
+    } catch (e: NotYourTurnException) {
+      println("Ignoring command, not your turn")
+    } catch (e: NotEnoughPlayersException) {
+      println("Not enough players")
+    } catch (e: IllegalMoveException) {
+      println(e.message)
+    } catch (e: SlotAlreadyFilledException) {
+      println(e.message)
     }
   }
 

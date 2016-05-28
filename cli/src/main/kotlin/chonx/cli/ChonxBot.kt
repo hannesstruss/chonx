@@ -6,7 +6,6 @@ import chonx.bot.telegram.types.Message
 import chonx.bot.telegram.types.User
 import chonx.core.Player
 import chonx.statemachine.Command
-import rx.Observable
 
 class ChonxBot(val telegram: Telegram, val runner: BotRunner) {
   private val loops: MutableMap<Int, GameLoop> = mutableMapOf()
@@ -20,37 +19,22 @@ class ChonxBot(val telegram: Telegram, val runner: BotRunner) {
       update.message?.let { message ->
         println(message)
         val chatId = message.chat.id
-        if (chatId !in loops) {
-          val loop = GameLoop(
-              commands(chatId),
-              { player, msg ->
-                telegram.sendMessage(chatId, msg)
-              }
-          )
-          loops.put(chatId, loop)
-          loop.start()
+        val loop = loops.getOrPut(chatId, { createLoop(chatId) })
+
+        if (message.text != null && message.from != null) {
+          val player = player(message.from!!)
+          parseSilent(sanitize(message), player.name)?.let {
+            loop.handle(player(message.from!!), it)
+          }
         }
       }
     }
   }
 
-  private fun commands(chatId: Int): Observable<Pair<Player, Command>> {
-    return updates
-        .map { it.message }
-        .filterNotNull()
-        .doOnNext { println(it.text) }
-        .filter { it.chat.id == chatId }
-        .map { message ->
-          if (message.text != null && message.from != null) {
-            val player = player(message.from!!)
-            parseSilent(sanitize(message), player.name)?.let {
-              Pair(player, it)
-            }
-          } else {
-            null
-          }
-        }
-        .filterNotNull()
+  private fun createLoop(chatId: Int): GameLoop {
+    return GameLoop({ player, msg ->
+      telegram.sendMessage(chatId, msg)
+    })
   }
 
   private fun player(user: User) = Player(user.first_name)
@@ -71,7 +55,4 @@ class ChonxBot(val telegram: Telegram, val runner: BotRunner) {
       return null
     }
   }
-
-  @Suppress("CAST_NEVER_SUCCEEDS")
-  fun <T : Any> Observable<T?>.filterNotNull() = this.filter { it != null } as Observable<T>
 }
